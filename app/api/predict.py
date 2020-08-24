@@ -107,19 +107,27 @@ async def predict(item: RedditPost):
     data = item.body
     embed = BASILICA.embed_sentence(data)
     log.info(data)
-    prediction = str(model.predict(np.array(embed).reshape(1, -1)))
-    probability = model.predict_proba(np.array(embed).reshape(1, -1))
+    # prediction = str(model.predict(np.array(embed).reshape(1, -1)))
+    probability = model.predict_proba(np.array(embed).reshape(1, -1))[0]
+    mapped = dict(zip(model.classes_, probability))
+    mapped = sorted(mapped.items(), key=lambda x: x[1], reverse=True)
     return {
-        'subreddit prediction': prediction,
-    }  # model.predict(data)
+        'subreddit prediction': [mapped[i][0] for i in range(item.n)],
+    }
 
 # if __name__ == "__main__":
 #         with open('logistic.model3', 'rb') as file:
 #             model = pickle.load(file)
 #         # title = ""
+#         n = 5
 #         text = "Made this meme for the upcoming tsm match. Don't have a good editing software but I hope you enjoy! #C9WIN"
 #         embed = BASILICA.embed_sentence(text)
-#         y_test = model.predict(np.array(embed).reshape(1, -1))
-#         y_proba = model.predict_proba(np.array(embed).reshape(1, -1))
-#         print(y_test)
-#         print(y_proba.max())
+#         embed = np.array(embed).reshape(1, -1)
+#         pred = model.predict(embed)
+#         cls = model.classes_
+#         prob = model.predict_proba(embed)[0]
+#         mapped = dict(zip(cls, prob))
+#         mapped = sorted(mapped.items(), key=lambda x: x[1], reverse=True)
+#         # mapped = sorted(mapped, key=mapped.keys(), reverse=True)
+#         print([mapped[i][0] for i in range(n)])
+#         print(mapped)
