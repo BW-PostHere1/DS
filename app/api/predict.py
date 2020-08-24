@@ -1,9 +1,12 @@
 import logging
 import random
-
+import pickle
 from fastapi import APIRouter
 import pandas as pd
 from pydantic import BaseModel, Field, validator
+import basilica
+import numpy as np
+
 
 subs = [
     'talesfromtechsupport', 'teenmom', 'Harley', 'ringdoorbell', 'intel', 'residentevil', 'BATProject', 'hockeyplayers',
@@ -29,10 +32,10 @@ subs = [
     'TalesFromThePizzaGuy', 'boxoffice', 'kingdomcome', 'TheSimpsons', 'beards', 'volleyball', 'tarot', 'Epilepsy', 'italy', 'SiliconValleyHBO', 'codes', 'TokyoGhoul'
 ]
 
-# for the real thing
-# import pickle
-# with open('model', 'rb') as file:
-#         model = pickle.load(file)
+with open('app/api/logistic.model3', 'rb') as file:
+        model = pickle.load(file)
+
+BASILICA = basilica.Connection("bb93bfb6-ce26-e973-c9de-ec6d3db0de84")
 
 log = logging.getLogger(__name__)
 router = APIRouter()
@@ -87,3 +90,36 @@ async def multiple_predict(item: RedditPost):
     return {
         'subreddit prediction': predictions,
     }  # model.predict(data)
+
+
+@router.post('/log-predict')
+async def predict(item: RedditPost):
+    """
+    Return n subs
+
+    ### Request Body
+    - `title`: string the title of the post
+    - `body`: string the meat of the post
+    - `n`: int number of subreddits you want back
+    ### Response
+    - `prediction`: string, the subreddit the model thinks this post belongs to
+    """
+    data = item.body
+    embed = BASILICA.embed_sentence(data)
+    log.info(data)
+    prediction = str(model.predict(np.array(embed).reshape(1, -1)))
+    probability = model.predict_proba(np.array(embed).reshape(1, -1))
+    return {
+        'subreddit prediction': prediction,
+    }  # model.predict(data)
+
+# if __name__ == "__main__":
+#         with open('logistic.model3', 'rb') as file:
+#             model = pickle.load(file)
+#         # title = ""
+#         text = "Made this meme for the upcoming tsm match. Don't have a good editing software but I hope you enjoy! #C9WIN"
+#         embed = BASILICA.embed_sentence(text)
+#         y_test = model.predict(np.array(embed).reshape(1, -1))
+#         y_proba = model.predict_proba(np.array(embed).reshape(1, -1))
+#         print(y_test)
+#         print(y_proba.max())

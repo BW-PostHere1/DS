@@ -16,6 +16,8 @@ fastapi = "*"
 pandas = "*"
 uvicorn = "*"
 plotly = "*"
+scikit-learn = "*"
+basilica = "*"
 
 [requires]
 python_version = "3.7"
