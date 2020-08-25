@@ -105,9 +105,12 @@ async def multiple_predict(item: RedditPost):
     """
     data = item.to_df()
     log.info(data)
-    predictions = random.sample(subs, item.n)
+    names = random.sample(subs, item.n)
+    values = np.random.dirichlet(np.ones(len(names)), size=1)[0]
+    mapped = list(zip(names, values))
+    mapped = sorted(mapped, key=lambda x: x[1], reverse=True)
     return {
-        'sub_pred': predictions,
+        'sub_pred': mapped
     }  # model.predict(data)
 
 
