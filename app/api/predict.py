@@ -101,13 +101,13 @@ async def multiple_predict(item: RedditPost):
     - `body`: string the meat of the post
     - `n`: int number of subreddits you want back
     ### Response
-    - `prediction`: string, the subreddit the model thinks this post belongs to
+    - `sub_pred`: dictionary, schema: {'sub_pred':[[sub-reddit, probability], [sub-reddit2, probability]...]}
     """
     data = item.to_df()
     log.info(data)
     predictions = random.sample(subs, item.n)
     return {
-        'subreddit prediction': predictions,
+        'sub_pred': predictions,
     }  # model.predict(data)
 
 
@@ -121,7 +121,7 @@ async def predict(item: RedditPost):
     - `body`: string the meat of the post
     - `n`: int number of subreddits you want back
     ### Response
-    - `prediction`: string, the subreddit the model thinks this post belongs to
+    - `sub_pred`: dictionary, schema: {'sub_pred':[[sub-reddit, probability], [sub-reddit2, probability]...]}
     """
     # get the relevant data
     data = item.body
