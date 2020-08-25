@@ -7,33 +7,52 @@ from pydantic import BaseModel, Field, validator
 import basilica
 import numpy as np
 
-
 subs = [
     'talesfromtechsupport', 'teenmom', 'Harley', 'ringdoorbell', 'intel', 'residentevil', 'BATProject', 'hockeyplayers',
-    'asmr', 'rawdenim', 'steinsgate', 'DBZDokkanBattle', 'Nootropics', 'l5r', 'NameThatSong', 'homeless', 'antidepressants',
-    'absolver', 'KissAnime', 'sissyhypno', 'oculusnsfw', 'dpdr', 'Garmin', 'AskLiteraryStudies', 'poetry_critics', 'skiing',
-    'shrimptank', 'logorequests', 'Stargate', 'foreskin_restoration', 'sharepoint', 'synthesizers', 'gravityfalls', 'androiddev',
-    'Grimdawn', 'driving', 'FORTnITE', 'dndnext', 'Magic', 'MtvChallenge', 'FoWtcg', 'harrypotter', 'TryingForABaby', 'sewing', 'foxholegame',
-    'madmen', 'JUSTNOMIL', 'APStudents', 'sharditkeepit', 'amateurradio', 'sleeptrain', 'fatpeoplestories', 'GameStop', 'scuba', 'Firefighting',
-    'Mustang', 'riverdale', 'flying', 'bartenders', 'scooters', 'trumpet', 'projecteternity', 'musictheory', 'factorio', 'SexToys', 'EternalCardGame',
-    'PLC', 'sailing', 'Mattress', 'climbing', 'uberdrivers', 'Cloud9', 'csharp', 'communism101', 'windowsphone', 'AskAnthropology', 'secretsanta',
-    'Volkswagen', 'BigBrother', 'osugame', 'spartanrace', 'needforspeed', 'Cruise', 'blackmirror', 'China', 'resumes', 'homeassistant', 'starcraft',
-    'Cubers', 'Warframe', 'Professors', 'parrots', 'TOR', 'AvPD', 'Landlord', 'WhiteWolfRPG', 'DBS_CardGame', 'atheism', 'buffy', 'Shoplifting',
-    'reddeadredemption', 'germany', 'Schizoid', 'Nanny', 'WWEChampions', 'MMA', 'MSLGame', 'French', 'cosplay', 'sugarlifestyleforum', 'PHPhelp',
-    'WarhammerCompetitive', 'Iota', 'CryptoKitties', 'snakes', 'securityguards', 'Hue', 'Costco', 'IASIP', 'tacobell', 'jewelry', 'EmulationOnAndroid',
-    'Rabbits', 'thesims', 'dresdenfiles', 'Hunting', 'MoviePassClub', 'TowerofGod', 'Allergies', 'snapchat', 'nanocurrency', 'Veterans', 'CaptainTsubasaDT',
-    'Anarchism', 'indonesia', 'horror', 'malaysia', 'theydidthemath', 'fleshlight', 'AcademicPsychology', 'productivity', 'LinkinPark', 'fatestaynight', 'kucoin',
-    'excel', 'tea', 'turning', 'UnresolvedMysteries', 'diabetes', 'eczema', 'whatsthisworth', 'westworld', 'thewalkingdead', 'docker', 'xxfitness', 'emojipasta',
-    'synology', 'puppy101', 'Libraries', 'dji', 'survivor', 'muacjdiscussion', 'GMAT', 'DunderMifflin', 'bigboobproblems', 'LDESurvival', 'discgolf', 'Dreams',
-    'headphones', 'StudentLoans', 'bourbon', 'Geosim', 'Plumbing', 'ptsd', 'lawschooladmissions', 'greysanatomy', 'PrettyLittleLiars', 'AlphaBayMarket', 'Snus',
-    'TheExpanse', 'Miscarriage', 'Eve', 'uscg', 'fakeid', 'drumcorps', 'wacom', 'SonyXperia', 'vexillology', 'formula1', 'animation', 'digitalnomad', 'graphic_design',
-    'VisitingIceland', 'widowers', 'tabletopgamedesign', 'cats', 'RocketLeague', 'GirlsXBattle', 'techsupport', 'woodworking', 'AutoModerator', 'yandere_simulator',
-    'ABraThatFits', 'HotPeppers', 'yoga', 'hookah', 'guitars', 'weddingplanning', 'biology', 'PlasticSurgery', 'obs', 'GodofWar', 'AstralProjection', 'malehairadvice',
-    'TalesFromThePizzaGuy', 'boxoffice', 'kingdomcome', 'TheSimpsons', 'beards', 'volleyball', 'tarot', 'Epilepsy', 'italy', 'SiliconValleyHBO', 'codes', 'TokyoGhoul'
+    'asmr', 'rawdenim', 'steinsgate', 'DBZDokkanBattle', 'Nootropics', 'l5r', 'NameThatSong', 'homeless',
+    'antidepressants',
+    'absolver', 'KissAnime', 'sissyhypno', 'oculusnsfw', 'dpdr', 'Garmin', 'AskLiteraryStudies', 'poetry_critics',
+    'skiing',
+    'shrimptank', 'logorequests', 'Stargate', 'foreskin_restoration', 'sharepoint', 'synthesizers', 'gravityfalls',
+    'androiddev',
+    'Grimdawn', 'driving', 'FORTnITE', 'dndnext', 'Magic', 'MtvChallenge', 'FoWtcg', 'harrypotter', 'TryingForABaby',
+    'sewing', 'foxholegame',
+    'madmen', 'JUSTNOMIL', 'APStudents', 'sharditkeepit', 'amateurradio', 'sleeptrain', 'fatpeoplestories', 'GameStop',
+    'scuba', 'Firefighting',
+    'Mustang', 'riverdale', 'flying', 'bartenders', 'scooters', 'trumpet', 'projecteternity', 'musictheory', 'factorio',
+    'SexToys', 'EternalCardGame',
+    'PLC', 'sailing', 'Mattress', 'climbing', 'uberdrivers', 'Cloud9', 'csharp', 'communism101', 'windowsphone',
+    'AskAnthropology', 'secretsanta',
+    'Volkswagen', 'BigBrother', 'osugame', 'spartanrace', 'needforspeed', 'Cruise', 'blackmirror', 'China', 'resumes',
+    'homeassistant', 'starcraft',
+    'Cubers', 'Warframe', 'Professors', 'parrots', 'TOR', 'AvPD', 'Landlord', 'WhiteWolfRPG', 'DBS_CardGame', 'atheism',
+    'buffy', 'Shoplifting',
+    'reddeadredemption', 'germany', 'Schizoid', 'Nanny', 'WWEChampions', 'MMA', 'MSLGame', 'French', 'cosplay',
+    'sugarlifestyleforum', 'PHPhelp',
+    'WarhammerCompetitive', 'Iota', 'CryptoKitties', 'snakes', 'securityguards', 'Hue', 'Costco', 'IASIP', 'tacobell',
+    'jewelry', 'EmulationOnAndroid',
+    'Rabbits', 'thesims', 'dresdenfiles', 'Hunting', 'MoviePassClub', 'TowerofGod', 'Allergies', 'snapchat',
+    'nanocurrency', 'Veterans', 'CaptainTsubasaDT',
+    'Anarchism', 'indonesia', 'horror', 'malaysia', 'theydidthemath', 'fleshlight', 'AcademicPsychology',
+    'productivity', 'LinkinPark', 'fatestaynight', 'kucoin',
+    'excel', 'tea', 'turning', 'UnresolvedMysteries', 'diabetes', 'eczema', 'whatsthisworth', 'westworld',
+    'thewalkingdead', 'docker', 'xxfitness', 'emojipasta',
+    'synology', 'puppy101', 'Libraries', 'dji', 'survivor', 'muacjdiscussion', 'GMAT', 'DunderMifflin',
+    'bigboobproblems', 'LDESurvival', 'discgolf', 'Dreams',
+    'headphones', 'StudentLoans', 'bourbon', 'Geosim', 'Plumbing', 'ptsd', 'lawschooladmissions', 'greysanatomy',
+    'PrettyLittleLiars', 'AlphaBayMarket', 'Snus',
+    'TheExpanse', 'Miscarriage', 'Eve', 'uscg', 'fakeid', 'drumcorps', 'wacom', 'SonyXperia', 'vexillology', 'formula1',
+    'animation', 'digitalnomad', 'graphic_design',
+    'VisitingIceland', 'widowers', 'tabletopgamedesign', 'cats', 'RocketLeague', 'GirlsXBattle', 'techsupport',
+    'woodworking', 'AutoModerator', 'yandere_simulator',
+    'ABraThatFits', 'HotPeppers', 'yoga', 'hookah', 'guitars', 'weddingplanning', 'biology', 'PlasticSurgery', 'obs',
+    'GodofWar', 'AstralProjection', 'malehairadvice',
+    'TalesFromThePizzaGuy', 'boxoffice', 'kingdomcome', 'TheSimpsons', 'beards', 'volleyball', 'tarot', 'Epilepsy',
+    'italy', 'SiliconValleyHBO', 'codes', 'TokyoGhoul'
 ]
 
 with open('app/api/logistic.model3', 'rb') as file:
-        model = pickle.load(file)
+    model = pickle.load(file)
 
 BASILICA = basilica.Connection("bb93bfb6-ce26-e973-c9de-ec6d3db0de84")
 
@@ -57,13 +76,13 @@ class RedditPost(BaseModel):
         """Validate that title is a string."""
         assert type(value) == str, f'Title == {value}, must be a string'
         return value
-    
+
     @validator('body')
     def check_body(cls, value):
         """Validate that title is a string."""
         assert type(value) == str, f'Body == {value}, must be a string'
         return value
-    
+
     @validator('n')
     def check_n(cls, value):
         """Validate that title is a string."""
@@ -104,30 +123,18 @@ async def predict(item: RedditPost):
     ### Response
     - `prediction`: string, the subreddit the model thinks this post belongs to
     """
+    # get the relevant data
     data = item.body
+    # get embeds for it
     embed = BASILICA.embed_sentence(data)
     log.info(data)
-    # prediction = str(model.predict(np.array(embed).reshape(1, -1)))
+    # get probability                   reshape it so the model takes it
     probability = model.predict_proba(np.array(embed).reshape(1, -1))[0]
-    mapped = dict(zip(model.classes_, probability))
-    mapped = sorted(mapped.items(), key=lambda x: x[1], reverse=True)
-    return {
-        'subreddit prediction': [mapped[i][0] for i in range(item.n)],
-    }
+    # convoluted way to order targets according to highest probability
+    mapped = list(zip(model.classes_, probability))
+    mapped = sorted(mapped, key=lambda x: x[1], reverse=True)
+    # get n targets back
+    return {'sub_pred': mapped[:item.n]}
 
 # if __name__ == "__main__":
-#         with open('logistic.model3', 'rb') as file:
-#             model = pickle.load(file)
-#         # title = ""
-#         n = 5
-#         text = "Made this meme for the upcoming tsm match. Don't have a good editing software but I hope you enjoy! #C9WIN"
-#         embed = BASILICA.embed_sentence(text)
-#         embed = np.array(embed).reshape(1, -1)
-#         pred = model.predict(embed)
-#         cls = model.classes_
-#         prob = model.predict_proba(embed)[0]
-#         mapped = dict(zip(cls, prob))
-#         mapped = sorted(mapped.items(), key=lambda x: x[1], reverse=True)
-#         # mapped = sorted(mapped, key=mapped.keys(), reverse=True)
-#         print([mapped[i][0] for i in range(n)])
-#         print(mapped)
+

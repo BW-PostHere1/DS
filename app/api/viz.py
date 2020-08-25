@@ -33,6 +33,7 @@ async def viz(item: RedditPost):
     # title = ""
     return fig.to_json()
 
+
 @router.post('/logreg-viz')
 async def viz(item: RedditPost):
     """
@@ -56,10 +57,11 @@ async def viz(item: RedditPost):
     # Make Plotly figure
     names = [mapped[i][0] for i in range(item.n)]
     values = [mapped[i][1] for i in range(item.n)]
+    # this just adds a 'other' category bc pie chart == 1
     if sum(values) < 1:
         names.append(f'{1000 - len(names)} other sub-reddits')
         values.append(1 - sum(values))
     fig = px.pie(values=values, names=names, title='Subreddits To Post To')
     fig.show()
-    # Return Plotly figure as JSON string
+    # Return Plotly figure as JSON
     return fig.to_json()
