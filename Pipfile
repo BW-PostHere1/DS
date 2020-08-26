@@ -18,6 +18,8 @@ uvicorn = "*"
 plotly = "*"
 scikit-learn = "*"
 basilica = "*"
+pymongo = "*"
+praw = "*"
 
 [requires]
 python_version = "3.7"
