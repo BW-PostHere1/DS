@@ -1,60 +1,13 @@
 import logging
-import random
-import pickle
 from fastapi import APIRouter
 import pandas as pd
 from pydantic import BaseModel, Field, validator
-import basilica
-import numpy as np
+import joblib
 
-subs = [
-    'talesfromtechsupport', 'teenmom', 'Harley', 'ringdoorbell', 'intel', 'residentevil', 'BATProject', 'hockeyplayers',
-    'asmr', 'rawdenim', 'steinsgate', 'DBZDokkanBattle', 'Nootropics', 'l5r', 'NameThatSong', 'homeless',
-    'antidepressants',
-    'absolver', 'KissAnime', 'sissyhypno', 'oculusnsfw', 'dpdr', 'Garmin', 'AskLiteraryStudies', 'poetry_critics',
-    'skiing',
-    'shrimptank', 'logorequests', 'Stargate', 'foreskin_restoration', 'sharepoint', 'synthesizers', 'gravityfalls',
-    'androiddev',
-    'Grimdawn', 'driving', 'FORTnITE', 'dndnext', 'Magic', 'MtvChallenge', 'FoWtcg', 'harrypotter', 'TryingForABaby',
-    'sewing', 'foxholegame',
-    'madmen', 'JUSTNOMIL', 'APStudents', 'sharditkeepit', 'amateurradio', 'sleeptrain', 'fatpeoplestories', 'GameStop',
-    'scuba', 'Firefighting',
-    'Mustang', 'riverdale', 'flying', 'bartenders', 'scooters', 'trumpet', 'projecteternity', 'musictheory', 'factorio',
-    'SexToys', 'EternalCardGame',
-    'PLC', 'sailing', 'Mattress', 'climbing', 'uberdrivers', 'Cloud9', 'csharp', 'communism101', 'windowsphone',
-    'AskAnthropology', 'secretsanta',
-    'Volkswagen', 'BigBrother', 'osugame', 'spartanrace', 'needforspeed', 'Cruise', 'blackmirror', 'China', 'resumes',
-    'homeassistant', 'starcraft',
-    'Cubers', 'Warframe', 'Professors', 'parrots', 'TOR', 'AvPD', 'Landlord', 'WhiteWolfRPG', 'DBS_CardGame', 'atheism',
-    'buffy', 'Shoplifting',
-    'reddeadredemption', 'germany', 'Schizoid', 'Nanny', 'WWEChampions', 'MMA', 'MSLGame', 'French', 'cosplay',
-    'sugarlifestyleforum', 'PHPhelp',
-    'WarhammerCompetitive', 'Iota', 'CryptoKitties', 'snakes', 'securityguards', 'Hue', 'Costco', 'IASIP', 'tacobell',
-    'jewelry', 'EmulationOnAndroid',
-    'Rabbits', 'thesims', 'dresdenfiles', 'Hunting', 'MoviePassClub', 'TowerofGod', 'Allergies', 'snapchat',
-    'nanocurrency', 'Veterans', 'CaptainTsubasaDT',
-    'Anarchism', 'indonesia', 'horror', 'malaysia', 'theydidthemath', 'fleshlight', 'AcademicPsychology',
-    'productivity', 'LinkinPark', 'fatestaynight', 'kucoin',
-    'excel', 'tea', 'turning', 'UnresolvedMysteries', 'diabetes', 'eczema', 'whatsthisworth', 'westworld',
-    'thewalkingdead', 'docker', 'xxfitness', 'emojipasta',
-    'synology', 'puppy101', 'Libraries', 'dji', 'survivor', 'muacjdiscussion', 'GMAT', 'DunderMifflin',
-    'bigboobproblems', 'LDESurvival', 'discgolf', 'Dreams',
-    'headphones', 'StudentLoans', 'bourbon', 'Geosim', 'Plumbing', 'ptsd', 'lawschooladmissions', 'greysanatomy',
-    'PrettyLittleLiars', 'AlphaBayMarket', 'Snus',
-    'TheExpanse', 'Miscarriage', 'Eve', 'uscg', 'fakeid', 'drumcorps', 'wacom', 'SonyXperia', 'vexillology', 'formula1',
-    'animation', 'digitalnomad', 'graphic_design',
-    'VisitingIceland', 'widowers', 'tabletopgamedesign', 'cats', 'RocketLeague', 'GirlsXBattle', 'techsupport',
-    'woodworking', 'AutoModerator', 'yandere_simulator',
-    'ABraThatFits', 'HotPeppers', 'yoga', 'hookah', 'guitars', 'weddingplanning', 'biology', 'PlasticSurgery', 'obs',
-    'GodofWar', 'AstralProjection', 'malehairadvice',
-    'TalesFromThePizzaGuy', 'boxoffice', 'kingdomcome', 'TheSimpsons', 'beards', 'volleyball', 'tarot', 'Epilepsy',
-    'italy', 'SiliconValleyHBO', 'codes', 'TokyoGhoul'
-]
-
-with open('app/api/logistic.model3', 'rb') as file:
-    model = pickle.load(file)
-
-BASILICA = basilica.Connection("bb93bfb6-ce26-e973-c9de-ec6d3db0de84")
+with open('app/api/sgdhuber_noclean.joblib', 'rb') as file:
+    pipe = joblib.load(file)
+with open('app/api/labelencoder.joblib', 'rb') as file:
+    encoder = joblib.load(file)
 
 log = logging.getLogger(__name__)
 router = APIRouter()
@@ -91,30 +44,7 @@ class RedditPost(BaseModel):
         return value
 
 
-@router.post('/n-dummy-predict')
-async def multiple_predict(item: RedditPost):
-    """
-    Return n subs
-
-    ### Request Body
-    - `title`: string the title of the post
-    - `body`: string the meat of the post
-    - `n`: int number of subreddits you want back
-    ### Response
-    - `sub_pred`: dictionary, schema: {'sub_pred':[[sub-reddit, probability], [sub-reddit2, probability]...]}
-    """
-    data = item.to_df()
-    log.info(data)
-    names = random.sample(subs, item.n)
-    values = np.random.dirichlet(np.ones(len(names)), size=1)[0]
-    mapped = list(zip(names, values))
-    mapped = sorted(mapped, key=lambda x: x[1], reverse=True)
-    return {
-        'sub_pred': mapped
-    }  # model.predict(data)
-
-
-@router.post('/log-predict')
+@router.post('/better-predict')
 async def predict(item: RedditPost):
     """
     Return n subs
@@ -126,18 +56,13 @@ async def predict(item: RedditPost):
     ### Response
     - `sub_pred`: dictionary, schema: {'sub_pred':[[sub-reddit, probability], [sub-reddit2, probability]...]}
     """
+    # CURRENTLY USING SGD
     # get the relevant data
-    data = item.body
-    # get embeds for it
-    embed = BASILICA.embed_sentence(data)
+    data = f'{item.title}, {item.body}'
+    probability = pipe.predict_proba(pd.Series(data))[0]
     log.info(data)
-    # get probability                   reshape it so the model takes it
-    probability = model.predict_proba(np.array(embed).reshape(1, -1))[0]
     # convoluted way to order targets according to highest probability
-    mapped = list(zip(model.classes_, probability))
+    mapped = list(zip(encoder.inverse_transform(pipe.classes_), probability))
     mapped = sorted(mapped, key=lambda x: x[1], reverse=True)
     # get n targets back
-    return {'sub_pred': mapped[:item.n]}
-
-# if __name__ == "__main__":
-
+    return [{'subreddit': mapped[i][0], "probability": float(mapped[i][1])} for i in range(item.n)]

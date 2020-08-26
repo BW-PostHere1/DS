@@ -16,10 +16,9 @@ fastapi = "*"
 pandas = "*"
 uvicorn = "*"
 plotly = "*"
-scikit-learn = "*"
-basilica = "*"
-pymongo = "*"
 praw = "*"
+scikit-learn = "==0.22.2"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.7"
