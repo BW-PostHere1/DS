@@ -1,3 +1,4 @@
+"""Make the pie-viz and bar-viz routes for fast api, more generally makes graphs"""
 from fastapi import APIRouter
 from .predict import RedditPost, pipe, encoder
 import plotly.express as px

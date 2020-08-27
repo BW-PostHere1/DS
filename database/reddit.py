@@ -1,3 +1,4 @@
+"""Leverages the reddit api + queries.py to get reddit posts and upload them to a postgres database"""
 import praw
 from database.queries import insert_post
 

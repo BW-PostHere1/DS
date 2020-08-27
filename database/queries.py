@@ -1,3 +1,4 @@
+"""Makes helper function for creating, and inserting into a postgres database"""
 import psycopg2
 
 

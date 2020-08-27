@@ -1,3 +1,4 @@
+"""Makes the predict route for fast api, more generally make prediction with the model"""
 import logging
 from fastapi import APIRouter
 import pandas as pd
