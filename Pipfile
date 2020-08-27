@@ -19,6 +19,7 @@ plotly = "*"
 praw = "*"
 scikit-learn = "==0.22.2"
 psycopg2-binary = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "3.7"

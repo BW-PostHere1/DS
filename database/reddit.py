@@ -1,15 +1,17 @@
 import praw
 from database.queries import insert_post
 
-reddit = praw.Reddit(client_id="8iZ0AOfNFEvXVw",
-                     client_secret="-swryLd22biXYc2sxrE7p2c3En4",
-                     username="notFatality",
-                     password="myipadpassword1",
-                     user_agent='u/notFatality')
+reddit = praw.Reddit(client_id="your client id",
+                     client_secret="your secret key",
+                     username="your username",
+                     password="your password",
+                     user_agent='u/ your username')
 
 
 def get_data(n_subs=1, n_posts=1):
     """
+    Fetches then upload a post to postgres
+
     n_subs - how many reddits to check
     n_posts - how many posts to grab per sub
     """
@@ -35,4 +37,4 @@ def get_data(n_subs=1, n_posts=1):
 
 
 if __name__ == "__main__":
-    get_data()
+    get_data(100, 300)

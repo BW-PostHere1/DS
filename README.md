@@ -46,3 +46,10 @@ locally the graphs will open in a new tab.
   - pipenv update
   - run this command : uvicorn app.main:app --reload
 
+- How can I use the deployed api?
+
+Through this link: https://dave-ds-api.herokuapp.com/
+
+You could read the Swagger docs but those need to be improved so here's an example in python:
+
+![alt text](carbon.png "Python Example")
