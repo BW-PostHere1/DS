@@ -1,4 +1,3 @@
 notebooks/.ipynb_checkpoints/BW4_model_eval_sepcnn-checkpoint.ipynb
 app/api/sgdhuber_noclean.joblib
-app/api/labelencoder.joblib
 mongo_cfg.py

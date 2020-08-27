@@ -27,9 +27,8 @@ Makes a fast-api with 3 routes
 The trained model file exceeds github's file size restrictions, 
 so it is currently hosted here: https://drive.google.com/file/d/10qX6GrKbzBHupMYJ4W6K_CYRYVI_ZPng/view?usp=sharing
 
-Label encoder here: https://missing-url.com
 
-Make sure you download the sgd model AND the label encoder, place them in app/api/
+Make sure you download the sgd model and place it in app/api/
 
 - Where can we find the api?
 
