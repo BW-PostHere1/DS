@@ -44,7 +44,7 @@ class RedditPost(BaseModel):
         return value
 
 
-@router.post('/better-predict')
+@router.post('/predict')
 async def predict(item: RedditPost):
     """
     Return n subs
@@ -54,7 +54,8 @@ async def predict(item: RedditPost):
     - `body`: string the meat of the post
     - `n`: int number of subreddits you want back
     ### Response
-    - `sub_pred`: dictionary, schema: {'sub_pred':[[sub-reddit, probability], [sub-reddit2, probability]...]}
+    - `sub_pred`: list, schema: [{"subreddit": "a sub here", "prediction": *a float here*},
+                                {"subreddit": "a sub here", "prediction": *a float here*}, ... n times]
     """
     # CURRENTLY USING SGD
     # get the relevant data
@@ -69,7 +70,4 @@ async def predict(item: RedditPost):
 
 
 if __name__ == "__main__":
-    with open('sgdhuber_noclean.joblib', 'rb') as file:
-        pipe = joblib.load(file)
-    with open('labelencoder.joblib', 'rb') as file:
-        encoder = joblib.load(file)
+    pass
