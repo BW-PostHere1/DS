@@ -1,5 +1,4 @@
 from fastapi.testclient import TestClient
-
 from app.main import app
 
 client = TestClient(app)
@@ -12,11 +11,10 @@ def test_valid_input():
         json={
             'title': 'First string',
             'body': 'Another string',
+            'n': 1
         }
     )
-    body = response.json()
     assert response.status_code == 200
-    assert body['prediction'] in ['r/AMA', 'r/Politics', 'r/PCMasterrace']
 
 
 def test_invalid_input():
@@ -26,8 +24,30 @@ def test_invalid_input():
         json={
             'title': -3.14,
             'body': 'this is a string',
+            'n': 1
         }
     )
-    body = response.json()
+    response2 = client.post(
+        '/predict',
+        json={
+            'title': 'a title',
+            'body': 7,
+            'n': 1
+        }
+    )
+    response3 = client.post(
+        '/predict',
+        json={
+            'title': 'title',
+            'body': 'this is a string',
+            'n': 'number'
+        }
+    )
     assert response.status_code == 422
-    assert 'title' in body['detail'][0]['loc']
+    assert response2.status_code == 422
+    assert response3.status_code == 422
+
+
+if __name__ == "__main__":
+    for func in (test_valid_input, test_invalid_input):
+        func()

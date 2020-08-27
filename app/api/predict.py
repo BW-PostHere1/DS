@@ -66,3 +66,10 @@ async def predict(item: RedditPost):
     mapped = sorted(mapped, key=lambda x: x[1], reverse=True)
     # get n targets back
     return [{'subreddit': mapped[i][0], "probability": float(mapped[i][1])} for i in range(item.n)]
+
+
+if __name__ == "__main__":
+    with open('sgdhuber_noclean.joblib', 'rb') as file:
+        pipe = joblib.load(file)
+    with open('labelencoder.joblib', 'rb') as file:
+        encoder = joblib.load(file)
